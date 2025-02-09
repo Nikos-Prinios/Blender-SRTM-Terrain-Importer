@@ -1,0 +1,31 @@
+schema_version = "1.0.0"
+
+id = "srtm_terrain_importer"
+version = "1.0.0"
+name = "SRTM Terrain Importer"
+tagline = "Import SRTM elevation data as accurate 3D terrain"
+maintainer = "Nikos Priniotakis"
+type = "add-on"
+
+blender_version_min = "4.2.0"
+
+license = [
+    "SPDX:GPL-2.0-or-later",
+]
+
+[permissions]
+files = "Import SRTM HGT files from disk"
+
+[build]
+paths_exclude_pattern = [
+    "__pycache__/",
+    "/.git/",
+    "/*.zip",
+]
+
+tags = [
+    "Import-Export",
+    "Terrain",
+    "GIS",
+    "Modeling"
+]
