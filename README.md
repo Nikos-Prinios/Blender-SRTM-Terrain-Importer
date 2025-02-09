@@ -53,7 +53,7 @@ A Blender addon that imports SRTM (Shuttle Radar Topography Mission) HGT files a
 
 ## License
 
-This addon is released under the GNU General Public License v2.0 or later.
+This addon is released under the GNU General Public License v3.0 or later.
 
 ## Credits
 
