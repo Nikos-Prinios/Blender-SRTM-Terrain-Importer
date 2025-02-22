@@ -19,7 +19,7 @@
 bl_info = {
     "name": "SRTM Terrain Importer",
     "author": "Nikos Priniotakis",
-    "version": (1, 0, 1),
+    "version": (1, 0, 0),
     "blender": (4, 2, 0),
     "location": "File > Import > SRTM HGT (.hgt)",
     "description": """Import SRTM (Shuttle Radar Topography Mission) HGT files as 3D terrain meshes.
@@ -33,7 +33,7 @@ The addon creates accurately scaled terrain with:
 
 Location: File > Import > SRTM HGT (.hgt)""",
     "warning": "",
-    "doc_url": "https://github.com/npriniotakis/blender-srtm-importer",
+    "doc_url": "https://github.com/Nikos-Prinios/Blender-SRTM-Terrain-Importer",
     "category": "Import-Export",
 }
 
@@ -302,6 +302,12 @@ class ImportHGTDisplacementOperator(bpy.types.Operator, ImportHelper):
 
     filename_ext = ".hgt"
 
+    # Drag and drop support
+    filepath: StringProperty(
+        subtype='FILE_PATH',
+        options={'SKIP_SAVE'}
+    )
+
     filter_glob: StringProperty(
         default="*.hgt",
         options={'HIDDEN'},
@@ -352,41 +358,46 @@ class ImportHGTDisplacementOperator(bpy.types.Operator, ImportHelper):
         context.view_layer.objects.active = terrain
         return {'FINISHED'}
 
+    def invoke(self, context, event):
+        if self.filepath:
+            return self.execute(context)
+        context.window_manager.fileselect_add(self)
+        return {'RUNNING_MODAL'}
+
+
 class HGTImportFileHandler(bpy.types.FileHandler):
     """Support for dragging and dropping .hgt files into Blender"""
     bl_idname = "import_mesh.hgt_handler"
     bl_label = "Import SRTM HGT"
     bl_file_extensions = ".hgt"
+    bl_import_operator = "import_mesh.hgt_displacement"  # Links to our import operator
 
-    def save(self, context, filepath=""):
-        return {'CANCELLED'}
+    @classmethod
+    def poll_drop(cls, context):
+        return context.area.type == 'VIEW_3D'
 
-    def load(self, context, filepath="", *, relpath=None):
-        terrain = create_terrain_from_hgt(
-            filepath,
-            subdivisions=50,  # default values
-            scale_z=1.0,
-            color_scheme='default'
-        )
-        return {'FINISHED'}
 
 def menu_func_import(self, context):
     self.layout.operator(ImportHGTDisplacementOperator.bl_idname, text="SRTM HGT (.hgt)")
+
 
 classes = (
     ImportHGTDisplacementOperator,
     HGTImportFileHandler,
 )
 
+
 def register():
     for cls in classes:
         bpy.utils.register_class(cls)
     bpy.types.TOPBAR_MT_file_import.append(menu_func_import)
 
+
 def unregister():
     for cls in classes:
         bpy.utils.unregister_class(cls)
     bpy.types.TOPBAR_MT_file_import.remove(menu_func_import)
+
 
 if __name__ == "__main__":
     register()
