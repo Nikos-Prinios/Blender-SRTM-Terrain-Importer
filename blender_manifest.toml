@@ -1,7 +1,7 @@
 schema_version = "1.0.0"
 
 id = "srtm_terrain_importer"
-version = "1.0.1"
+version = "1.0.2"
 name = "SRTM Terrain Importer"
 tagline = "Import SRTM elevation data as accurate 3D terrain"
 maintainer = "Nikos Priniotakis"
