@@ -1,7 +1,7 @@
 schema_version = "1.0.0"
 
 id = "srtm_terrain_importer"
-version = "1.0.4"
+version = "1.0.5"
 name = "SRTM Terrain Importer"
 tagline = "Import SRTM elevation data as accurate 3D terrain"
 maintainer = "Nikos Priniotakis"
@@ -13,6 +13,8 @@ license = [
     "SPDX:GPL-3.0-or-later",
 ]
 
+tags = ["Import-Export"]
+
 [permissions]
 files = "Import SRTM HGT files from disk"
 
@@ -23,4 +25,4 @@ paths_exclude_pattern = [
     "/*.zip",
 ]
 
-tags = ["Import-Export"]
+
