@@ -22,9 +22,18 @@ bl_info = {
     "version": (1, 0, 0),
     "blender": (4, 2, 0),
     "location": "File > Import > SRTM HGT (.hgt)",
-    "description": "Import SRTM HGT files as 3D terrain",
+    "description": """Import SRTM (Shuttle Radar Topography Mission) HGT files as 3D terrain meshes.
+    
+HGT files contain elevation data collected by NASA's SRTM mission and can be obtained from various sources like USGS Earth Explorer.
+The addon creates accurately scaled terrain with:
+- Real-world dimensions based on latitude
+- Elevation-based color gradient material
+- Adjustable vertical scale and subdivision levels
+- Support for both 1 arc-second (30m) and 3 arc-second (90m) resolution
+
+Location: File > Import > SRTM HGT (.hgt)""",
     "warning": "",
-    "doc_url": "",
+    "doc_url": "https://github.com/npriniotakis/blender-srtm-importer",
     "category": "Import-Export",
 }
 
@@ -56,7 +65,6 @@ def setup_3d_views():
                     if space.type == 'VIEW_3D':
                         space.clip_start = 1
                         space.clip_end = 1e+06
-
 
 def create_heightmap_texture(context, heightmap, name):
     """Create texture from heightmap data"""
@@ -219,7 +227,7 @@ def create_terrain_material(name, height_texture, dem_min, dem_max, width, heigh
     links.new(texture.outputs['Color'], displacement.inputs['Height'])
     links.new(displacement.outputs['Displacement'], output.inputs['Displacement'])
 
-    # Enable displacement !
+    # Enable displacement
     material.cycles.displacement_method = 'DISPLACEMENT'
     material.displacement_method = 'DISPLACEMENT'
 
@@ -240,7 +248,6 @@ def create_terrain_from_hgt(filepath, subdivisions=50, scale_z=1.0, color_scheme
         lat = -lat
     if basename[3] == 'W':
         lon = -lon
-
 
     width, height = get_tile_dimensions(lat)
 
@@ -277,7 +284,7 @@ def create_terrain_from_hgt(filepath, subdivisions=50, scale_z=1.0, color_scheme
                                      width, height, scale_z, color_scheme)
     plane.data.materials.append(material)
 
-    # Store metadata just in case 
+    # Store metadata
     plane["latitude"] = lat
     plane["longitude"] = lon
     plane["dem_min"] = dem_min
@@ -343,17 +350,24 @@ class ImportHGTDisplacementOperator(bpy.types.Operator, ImportHelper):
         bpy.ops.object.select_all(action='DESELECT')
         terrain.select_set(True)
         context.view_layer.objects.active = terrain
+        return {'FINISHED'}
 
-        # Center view on created object
-        for area in context.screen.areas:
-            if area.type == 'VIEW_3D':
-                for region in area.regions:
-                    if region.type == 'WINDOW':
-                        with context.temp_override(area=area, region=region):
-                            bpy.ops.view3d.view_all()
-                            bpy.ops.view3d.view_selected()
-                        break
+class HGTImportFileHandler(bpy.types.FileHandler):
+    """Support for dragging and dropping .hgt files into Blender"""
+    bl_idname = "import_mesh.hgt_handler"
+    bl_label = "Import SRTM HGT"
+    bl_extensions = {".hgt"}
 
+    def save(self, context, filepath=""):
+        return {'CANCELLED'}
+
+    def load(self, context, filepath="", *, relpath=None):
+        terrain = create_terrain_from_hgt(
+            filepath,
+            subdivisions=50,  # default values
+            scale_z=1.0,
+            color_scheme='default'
+        )
         return {'FINISHED'}
 
 def menu_func_import(self, context):
@@ -361,6 +375,7 @@ def menu_func_import(self, context):
 
 classes = (
     ImportHGTDisplacementOperator,
+    HGTImportFileHandler,
 )
 
 def register():
