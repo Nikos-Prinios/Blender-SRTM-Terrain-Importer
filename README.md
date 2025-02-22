@@ -13,13 +13,6 @@ A Blender addon that imports SRTM (Shuttle Radar Topography Mission) HGT files a
 - Displacement-based mesh detail
 - Metadata storage (coordinates, elevation range, dimensions)
 
-## Installation
-
-1. Download the `SRTM_Terrain_Importer.py` file
-2. Open Blender and go to Edit > Preferences > Add-ons
-3. Click "Install..." and select the downloaded file
-4. Enable the addon by checking the box next to "Import-Export: SRTM Terrain Importer"
-
 ## Usage
 
 1. Go to File > Import > SRTM HGT (.hgt)
