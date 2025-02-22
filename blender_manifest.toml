@@ -24,8 +24,5 @@ paths_exclude_pattern = [
 ]
 
 tags = [
-    "Import-Export",
-    "Terrain",
-    "GIS",
-    "Modeling"
+    "Import-Export"
 ]
