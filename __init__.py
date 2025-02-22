@@ -19,7 +19,7 @@
 bl_info = {
     "name": "SRTM Terrain Importer",
     "author": "Nikos Priniotakis",
-    "version": (1, 0, 2),
+    "version": (1, 0, 3),
     "blender": (4, 2, 0),
     "location": "File > Import > SRTM HGT (.hgt)",
     "description": """Import SRTM (Shuttle Radar Topography Mission) HGT files as 3D terrain meshes.
