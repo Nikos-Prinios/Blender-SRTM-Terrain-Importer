@@ -356,7 +356,7 @@ class HGTImportFileHandler(bpy.types.FileHandler):
     """Support for dragging and dropping .hgt files into Blender"""
     bl_idname = "import_mesh.hgt_handler"
     bl_label = "Import SRTM HGT"
-    bl_extensions = {".hgt"}
+    bl_file_extensions = {".hgt"}
 
     def save(self, context, filepath=""):
         return {'CANCELLED'}
