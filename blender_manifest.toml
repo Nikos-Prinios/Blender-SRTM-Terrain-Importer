@@ -23,6 +23,4 @@ paths_exclude_pattern = [
     "/*.zip",
 ]
 
-tags = [
-    "Import-Export"
-]
+tags = ["Import-Export"]
